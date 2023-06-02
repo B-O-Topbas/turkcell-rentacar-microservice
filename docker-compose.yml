@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  kafka:
+    restart: always
+    container_name: kafka-t2
+    image: bashj79/kafka-kraft
+    ports:
+      - "9092:9092"
+    volumes:
+      - kafka_data:/opt/kafka/kafka-logs
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+
+#  mongodb:
+#    restart: always
+#    container_name: turkcell2-filterdb
+#    image: mongo
+#    ports:
+#      - "27017:27017"
+#    volumes:
+#      - mongodb_data:/data/db
+
+  maintenancedb:
+    restart: always
+    container_name: maintenancedb-t2
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_TCP_PORT=3306
+      - VIRTUAL_PORT=3306
+    volumes:
+      - maintenancedb_data:/data/db
+
+  paymentdb:
+    restart: always
+    container_name: paymentdb-t2
+    image: mysql
+    ports:
+      - "3307:3307"
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_TCP_PORT=3307
+      - VIRTUAL_PORT=3307
+    volumes:
+      - paymentdb_data:/data/db
+
+  keycloak:
+    restart: always
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak-t2
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    command: start-dev
+    volumes:
+      - .:/opt/jboss/keycloak/imports
+
+
+volumes:
+  kafka_data:
+  mongodb_data:
+  maintenancedb_data:
+  paymentdb_data:

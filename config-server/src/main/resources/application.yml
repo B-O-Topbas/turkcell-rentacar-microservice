@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        default-label: main
+        git:
+          uri: https://github.com/B-O-Topbas/config-server-t2.git
+server:
+  port: 8888
