@@ -7,5 +7,6 @@ spring:
         default-label: main
         git:
           uri: https://github.com/B-O-Topbas/config-server-t2.git
+#/home/beytullahonur/Belgeler/Eğitim Dökümanları/config-server-t2-master
 server:
   port: 8888

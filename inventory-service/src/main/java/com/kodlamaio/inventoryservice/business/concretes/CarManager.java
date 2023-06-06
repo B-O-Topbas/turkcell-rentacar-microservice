@@ -77,7 +77,6 @@ public class CarManager implements CarService {
     public ClientResponse checkIfCarAvailable(UUID id) {
         var response = new ClientResponse();
         validateCarAvailability(id, response);
-
         return response;
     }
 

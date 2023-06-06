@@ -1,5 +1,6 @@
 package com.kodlamaio.inventoryservice.api.controllers;
 
+import com.kodlamaio.commonpackage.utils.constants.Roles;
 import com.kodlamaio.commonpackage.utils.dto.ClientResponse;
 import com.kodlamaio.inventoryservice.business.abstracts.CarService;
 import com.kodlamaio.inventoryservice.business.dto.requests.create.CreateCarRequest;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
+@CrossOrigin
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/cars")
@@ -24,7 +25,7 @@ public class CarsController {
     private final CarService service;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('user','admin')")
+    @PreAuthorize(Roles.AllRoles)
     public List<GetAllCarsResponse> getAll() {
         return service.getAll();
     }
@@ -36,17 +37,20 @@ public class CarsController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize(Roles.AdminOrDeveloperOrModerator)
     public CreateCarResponse add(@Valid @RequestBody CreateCarRequest request) {
         return service.add(request);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize(Roles.AdminOrDeveloperOrModerator)
     public UpdateCarResponse update(@PathVariable UUID id, @Valid @RequestBody UpdateCarRequest request) {
         return service.update(id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize(Roles.AdminOrDeveloperOrModerator)
     public void delete(@PathVariable UUID id) {
         service.delete(id);
     }

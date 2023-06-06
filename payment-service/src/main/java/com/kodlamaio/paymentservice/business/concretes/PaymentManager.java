@@ -32,21 +32,17 @@ public class PaymentManager implements PaymentService {
     @Override
     public List<GetAllPaymentsResponse> getAll() {
         var brands = repository.findAll();
-        var response = brands
+        return brands
                 .stream()
                 .map(brand -> mapper.forResponse().map(brand, GetAllPaymentsResponse.class))
                 .toList();
-
-        return response;
     }
 
     @Override
     public GetPaymentResponse getById(UUID id) {
         rules.checkIfPaymentExists(id);
         var brand = repository.findById(id).orElseThrow();
-        var response = mapper.forResponse().map(brand, GetPaymentResponse.class);
-
-        return response;
+        return mapper.forResponse().map(brand, GetPaymentResponse.class);
     }
 
     @Override

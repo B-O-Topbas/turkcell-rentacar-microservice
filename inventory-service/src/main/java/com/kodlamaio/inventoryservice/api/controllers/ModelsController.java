@@ -1,5 +1,6 @@
 package com.kodlamaio.inventoryservice.api.controllers;
 
+import com.kodlamaio.commonpackage.utils.constants.Roles;
 import com.kodlamaio.inventoryservice.business.abstracts.ModelService;
 import com.kodlamaio.inventoryservice.business.dto.requests.create.CreateModelRequest;
 import com.kodlamaio.inventoryservice.business.dto.requests.update.UpdateModelRequest;
@@ -10,11 +11,12 @@ import com.kodlamaio.inventoryservice.business.dto.responses.update.UpdateModelR
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
+@CrossOrigin
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/models")
@@ -22,28 +24,33 @@ public class ModelsController {
     private final ModelService service;
 
     @GetMapping
+    @PreAuthorize(Roles.AdminOrDeveloperOrModerator)
     public List<GetAllModelsResponse> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize(Roles.AdminOrDeveloper)
     public GetModelResponse getById(@PathVariable UUID id) {
         return service.getById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize(Roles.AdminOrDeveloper)
     public CreateModelResponse add(@Valid @RequestBody CreateModelRequest request) {
         return service.add(request);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize(Roles.AdminOrDeveloper)
     public UpdateModelResponse update(@PathVariable UUID id, @Valid @RequestBody UpdateModelRequest request) {
         return service.update(id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize(Roles.AdminOrDeveloperOrModerator)
     public void delete(@PathVariable UUID id) {
         service.delete(id);
     }
