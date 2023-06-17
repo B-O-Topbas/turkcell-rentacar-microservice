@@ -21,20 +21,16 @@ public class FilterManager implements FilterService {
     @Override
     public List<GetAllFiltersResponse> getAll() {
         var filters = repository.findAll();
-        var response = filters
+        return filters
                 .stream()
                 .map(filter -> mapper.forResponse().map(filter, GetAllFiltersResponse.class))
                 .toList();
-
-        return response;
     }
 
     @Override
     public GetFilterResponse getById(UUID id) {
         var filter = repository.findById(id).orElseThrow();
-        var response = mapper.forResponse().map(filter, GetFilterResponse.class);
-
-        return response;
+        return mapper.forResponse().map(filter, GetFilterResponse.class);
     }
 
     @Override
@@ -59,7 +55,7 @@ public class FilterManager implements FilterService {
 
     @Override
     public void deleteAllByModelId(UUID modelId) {
-
+        repository.deleteAllByBrandId(modelId);
     }
 
     @Override

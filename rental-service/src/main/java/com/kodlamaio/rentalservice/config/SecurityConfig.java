@@ -1,7 +1,6 @@
 package com.kodlamaio.rentalservice.config;
 
 import com.kodlamaio.commonpackage.utils.constants.Paths;
-import com.kodlamaio.commonpackage.utils.constants.Roles;
 import com.kodlamaio.commonpackage.utils.security.KeycloakJwtRoleConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,11 +18,11 @@ public class SecurityConfig {
         converter.setJwtGrantedAuthoritiesConverter(new KeycloakJwtRoleConverter());
 
         security.authorizeHttpRequests()
-                .requestMatchers("/api/rentals/**",Paths.Rental.Prefix)
-                .hasAnyRole(Roles.Admin, Roles.Developer, Roles.Moderator, Roles.User)
+                .requestMatchers("/api/rentals/**")
+                .hasAnyRole("admin","user","moderator")
                 .requestMatchers(Paths.SwaggerPaths)
                 .permitAll()
-                .requestMatchers(Paths.PrometheusMetricsPath)
+                .requestMatchers("/actuator/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

@@ -11,16 +11,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+
+
 @Service
 @RequiredArgsConstructor
 public class InvoiceServiceImpl implements InvoiceService{
     private final ModelMapper mapper;
     private final InvoiceRepository invoiceRepository;
+
     @Override
     public void create(InvoiceCreatedEvent event) {
         var invoce=mapper.map(event, Invoice.class);
         invoiceRepository.save(invoce);
-
     }
     @Override
     public List<GetAllInvoiceResponse> getAll() {

@@ -21,22 +21,20 @@ public class SecurityConfig {
         var converter=new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(new KeycloakJwtRoleConverter());
 
-
-
         http.authorizeHttpRequests()
-                .requestMatchers(Arrays.toString(Paths.SwaggerPaths),Paths.PrometheusMetricsPath)
+                .requestMatchers("/api/filters/**")
+                .hasAnyRole(Roles.Admin,Roles.Developer,Roles.User)
+                .requestMatchers(Paths.SwaggerPaths)
                 .permitAll()
-                .requestMatchers("/api/filters")
-                .hasAnyRole(Roles.User,Roles.Admin,Roles.Developer)
+                .requestMatchers("/actuator/**")
+                .permitAll()
                 .anyRequest()
                 .authenticated()
-                .and()
-                .csrf()
+                .and().csrf()
                 .disable()
                 .oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(converter);
-
         return http.build();
     }
 }

@@ -11,12 +11,12 @@ import com.kodlamaio.rentalservice.business.dto.responses.UpdateRentalResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
 @CrossOrigin
 @RestController
 @AllArgsConstructor
@@ -25,8 +25,7 @@ public class RentalsController {
     private final RentalService service;
 
     @GetMapping
-    @Secured("ROLE_admin")
-//    @PreAuthorize(Roles.AdminOrDeveloperOrModerator)
+    @PreAuthorize("hasRole('admin')")
     public List<GetAllRentalsResponse> getAll() {
         return service.getAll();
     }

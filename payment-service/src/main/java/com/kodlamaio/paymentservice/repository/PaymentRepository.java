@@ -16,6 +16,33 @@ public interface PaymentRepository extends JpaRepository<Payment, UUID> {
             String cvv
     );
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // SPeL -> Spring Expression Language
     /*
     @Query(

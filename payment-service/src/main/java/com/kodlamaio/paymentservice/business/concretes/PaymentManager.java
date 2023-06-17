@@ -31,39 +31,35 @@ public class PaymentManager implements PaymentService {
 
     @Override
     public List<GetAllPaymentsResponse> getAll() {
-        var brands = repository.findAll();
-        return brands
+        var payments = repository.findAll();
+        return payments
                 .stream()
-                .map(brand -> mapper.forResponse().map(brand, GetAllPaymentsResponse.class))
+                .map(payment -> mapper.forResponse().map(payment, GetAllPaymentsResponse.class))
                 .toList();
     }
 
     @Override
     public GetPaymentResponse getById(UUID id) {
         rules.checkIfPaymentExists(id);
-        var brand = repository.findById(id).orElseThrow();
-        return mapper.forResponse().map(brand, GetPaymentResponse.class);
+        var payment = repository.findById(id).orElseThrow();
+        return mapper.forResponse().map(payment, GetPaymentResponse.class);
     }
 
     @Override
     public CreatePaymentResponse add(CreatePaymentRequest request) {
         rules.checkIfCardNumberExists(request.getCardNumber());
-        var brand = mapper.forRequest().map(request, Payment.class);
-        var createdPayment = repository.save(brand);
-        var response = mapper.forResponse().map(createdPayment, CreatePaymentResponse.class);
-
-        return response;
+        var payment = mapper.forRequest().map(request, Payment.class);
+        var createdPayment = repository.save(payment);
+        return mapper.forResponse().map(createdPayment, CreatePaymentResponse.class);
     }
 
     @Override
     public UpdatePaymentResponse update(UUID id, UpdatePaymentRequest request) {
         rules.checkIfPaymentExists(id);
-        var brand = mapper.forRequest().map(request, Payment.class);
-        brand.setId(id);
-        repository.save(brand);
-        var response = mapper.forResponse().map(brand, UpdatePaymentResponse.class);
-
-        return response;
+        var payment = mapper.forRequest().map(request, Payment.class);
+        payment.setId(id);
+        repository.save(payment);
+        return mapper.forResponse().map(payment, UpdatePaymentResponse.class);
     }
 
     @Override
@@ -72,14 +68,16 @@ public class PaymentManager implements PaymentService {
         repository.deleteById(id);
     }
 
+
+
+    /*****/
     @Override
     public ClientResponse processPayment(CreateRentalPaymentRequest request) {
         var response = new ClientResponse();
         processPaymentTransaction(request, response);
-
         return response;
     }
-
+/*****/
     private void processPaymentTransaction(CreateRentalPaymentRequest request, ClientResponse response) {
         try {
             rules.checkIfPaymentValid(request);

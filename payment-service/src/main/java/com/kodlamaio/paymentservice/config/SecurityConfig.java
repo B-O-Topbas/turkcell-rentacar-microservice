@@ -10,8 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.Arrays;
-
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
@@ -21,15 +19,17 @@ public class SecurityConfig {
         converter.setJwtGrantedAuthoritiesConverter(new KeycloakJwtRoleConverter());
 
         security.authorizeHttpRequests()
-                .requestMatchers("/api/payments/check", Paths.PrometheusMetricsPath, Arrays.toString(Paths.SwaggerPaths))
+                .requestMatchers("/api/**")
+                .hasAnyRole(Roles.Admin,Roles.User,Roles.Moderator,Roles.Developer)
+                .requestMatchers(Paths.SwaggerPaths)
                 .permitAll()
-                .requestMatchers("/api/payments")
-                .hasAnyRole(Roles.Admin,Roles.User,Roles.Developer)
+                .requestMatchers("/actuator/**")
+                .permitAll()
+                .requestMatchers("/api/payments/check")
+                .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
-                .csrf()
-                .disable()
                 .oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(converter);
